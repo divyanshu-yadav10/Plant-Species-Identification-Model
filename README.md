@@ -1,111 +1,85 @@
-🌿 Indian Plant Species Identification using ConvNeXt and Transfer Learning
-Overview
+## 🌿 Indian Plant Species Identification using ConvNeXt and Transfer Learning
 
-This repository presents a deep learning–based system for Indian plant species identification using a ConvNeXt-based transfer learning architecture. The project focuses on accurately classifying plant species native to India while bridging the gap between automated image recognition and traditional botanical knowledge, including medicinal, culinary, and ecological relevance.
+## Overview
 
-India hosts a highly diverse range of plant species with region-specific morphological characteristics that are often underrepresented in global plant classification datasets. This work addresses that limitation by training and fine-tuning a model specifically on an Indian plant dataset comprising 112 species, enabling more reliable and region-aware classification.
+This repository presents a **deep learning–based system** for **Indian plant species identification** using a **ConvNeXt-based transfer learning architecture**. The project focuses on accurately classifying plant species native to India while bridging the gap between automated image recognition and traditional botanical knowledge, including **medicinal, culinary, and ecological relevance**.
 
-Key Contributions
+India hosts a highly diverse range of plant species with region-specific morphological characteristics that are often underrepresented in global plant classification datasets. This work addresses that limitation by training and fine-tuning a model specifically on an **Indian plant dataset comprising 112 species**, enabling more reliable and region-aware classification.
 
-Developed a specialized plant classification model tailored to Indian flora.
+## Key Contributions
 
-Leveraged ConvNeXt (CNN-based architecture) with transfer learning from ImageNet to capture fine-grained visual features such as leaf textures, venation patterns, and plant structures.
+* Developed a **specialized plant classification model** tailored to **Indian flora**.
+* Leveraged **ConvNeXt (CNN-based architecture)** with **transfer learning from ImageNet** to capture fine-grained visual features such as **leaf textures, venation patterns, and plant structures**.
+* Integrated plant classification with **metadata related to traditional uses**, enhancing practical applicability for **botanical research, agriculture, and traditional medicine**.
+* Achieved **high classification performance** across diverse plant species.
 
-Designed a hybrid feature representation approach that captures both local spatial details and global contextual information.
+## Dataset
 
-Integrated plant classification with metadata related to traditional uses, enhancing the practical applicability of the system for botanical research, agriculture, and traditional medicine.
+* **Source:** Indian plant image dataset introduced by **IIT Hyderabad**
+  (**Indic Leaf Dataset:** [https://github.com/vamsidharmuthireddy/Indic-Leaf-Dataset](https://github.com/vamsidharmuthireddy/Indic-Leaf-Dataset))
+* **Number of Classes:** 112 plant species
+* **Data Characteristics:** High-quality images collected from diverse botanical sources, representing varied **lighting conditions, backgrounds, and plant growth stages**.
 
-Achieved high classification performance across diverse plant species.
+## Methodology
 
-Dataset
+### 1. Data Preprocessing & Augmentation
 
-Source: Indian plant image dataset introduced by IIT Hyderabad
-(Indic Leaf Dataset: https://github.com/vamsidharmuthireddy/Indic-Leaf-Dataset
-)
+* Images resized to **224 × 224 pixels**.
+* Preprocessing aligned with **ConvNeXt requirements**.
+* Applied **data augmentation techniques** such as **rotation, shifting, zooming, and horizontal flipping** to improve generalization.
+* Performed **stratified train–validation splitting** to maintain class balance.
 
-Number of Classes: 112 plant species
+### 2. Model Architecture
 
-Data Characteristics: High-quality images collected from diverse botanical sources representing varied lighting conditions, backgrounds, and plant growth stages.
+* **Base Model:** ConvNeXtBase pretrained on **ImageNet** (top layers removed).
 
-Methodology
-1. Data Preprocessing & Augmentation
+**Custom Classification Head:**
 
-Images resized to 224 × 224 pixels.
+* Global Average Pooling
+* Fully connected layer (**256 neurons, ReLU**)
+* Dropout for regularization
+* Softmax output layer for **multi-class classification**
 
-Preprocessing aligned with ConvNeXt requirements.
+**Transfer Learning Strategy:**
 
-Applied data augmentation techniques such as rotation, shifting, zooming, and horizontal flipping to improve generalization.
+* Initial training with **frozen base layers**
+* Fine-tuning by **unfreezing the last 80 layers of ConvNeXt**
 
-Performed stratified train–validation splitting to maintain class balance.
+### 3. Training Configuration
 
-2. Model Architecture
+* **Optimizer:** Adam
+* **Learning Rate:**
 
-Base Model: ConvNeXtBase pretrained on ImageNet (top layers removed).
+  * Initial training: **1e-4**
+  * Fine-tuning: Reduced dynamically using **ReduceLROnPlateau**
+* **Loss Function:** Categorical Crossentropy
+* **Callbacks:**
 
-Custom Classification Head:
+  * EarlyStopping
+  * ModelCheckpoint (**best model selection**)
 
-Global Average Pooling
+## Results
 
-Fully connected layer (256 neurons, ReLU)
+* **Overall Accuracy:** ~**94%** on ~**4,200** validation samples
+* **Weighted F1-Score:** ~**90%**
+* **Macro Average:** Precision ≈ **90%**, Recall ≈ **89%**
 
-Dropout for regularization
+**Class-wise Performance:**
 
-Softmax output layer for multi-class classification
+* **Sago Palm:** ~**99%** Precision, Recall, and F1-score
+* **Acalypha:** Precision ≈ **98%**, F1-score ≈ **95%**
+* **Banana:** Precision ≈ **100%**, F1-score ≈ **97%**
 
-Transfer Learning Strategy:
+These results demonstrate the model’s ability to effectively capture both **fine-grained details** and **overall structural patterns** across diverse plant species.
 
-Initial training with frozen base layers
+## Applications
 
-Fine-tuning by unfreezing the last 80 layers of ConvNeXt
+* **Botanical research and species documentation**
+* **Agricultural decision support systems**
+* **Preservation of indigenous plant knowledge**
+* **Educational tools for plant identification**
+* **Support systems for traditional and herbal medicine research**
 
-3. Training Configuration
+## Conclusion
 
-Optimizer: Adam
-
-Learning Rate:
-
-Initial training: 1e-4
-
-Fine-tuning: Reduced dynamically using ReduceLROnPlateau
-
-Loss Function: Categorical Crossentropy
-
-Callbacks:
-
-EarlyStopping
-
-ModelCheckpoint (best model selection)
-
-Results
-
-Overall Accuracy: ~94% on ~4,200 validation samples
-
-Weighted F1-Score: ~90%
-
-Macro Average: Precision ≈ 90%, Recall ≈ 89%
-
-Class-wise Performance:
-
-Sago Palm: ~99% Precision, Recall, and F1-score
-
-Acalypha: Precision ≈ 98%, F1-score ≈ 95%
-
-Banana: Precision ≈ 100%, F1-score ≈ 97%
-
-These results demonstrate the model’s ability to effectively capture both fine-grained details and overall structural patterns across diverse plant species.
-
-Applications
-
-Botanical research and species documentation
-
-Agricultural decision support systems
-
-Preservation of indigenous plant knowledge
-
-Educational tools for plant identification
-
-Support systems for traditional and herbal medicine research
-
-Conclusion
-
-The proposed ConvNeXt-based transfer learning approach provides a robust and scalable solution for Indian plant species classification. By combining modern deep learning techniques with region-specific datasets and traditional knowledge integration, this system offers both high accuracy and practical relevance, addressing key gaps in existing plant classification models.
+The proposed **ConvNeXt-based transfer learning approach** provides a **robust and scalable solution** for **Indian plant species classification**. By combining modern deep learning techniques with **region-specific datasets** and **traditional knowledge integration**, this system offers both **high accuracy** and **practical relevance**, addressing key gaps in existing plant classification models.
