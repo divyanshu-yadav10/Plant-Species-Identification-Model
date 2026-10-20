@@ -1,4 +1,4 @@
-## 🌿 Indian Plant Species Identification using ConvNeXt and Transfer Learning
+##  Indian Plant Species Identification using ConvNeXt and Transfer Learning
 
 ## Overview
 
